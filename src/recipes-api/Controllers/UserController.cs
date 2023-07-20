@@ -26,7 +26,7 @@ public class UserController : ControllerBase
     }
     catch (Exception error)
     {
-      return BadRequest(error.Message);
+      return NotFound(error.Message);
     }
   }
 
@@ -38,11 +38,11 @@ public class UserController : ControllerBase
     {
       _service.AddUser(user);
 
-      return Ok(user);
+      return StatusCode(201, user);
     }
     catch (Exception error)
     {
-      return NotFound(error.Message);
+      return BadRequest(error.Message);
     }
   }
 
@@ -50,7 +50,25 @@ public class UserController : ControllerBase
   [HttpPut("{email}")]
   public IActionResult Update(string email, [FromBody] User user)
   {
-    throw new NotImplementedException();
+    try
+    {
+      bool userExists = _service.UserExists(email);
+
+      if (userExists)
+      {
+        _service.UpdateUser(user);
+
+        return Ok(user);
+      }
+      else
+      {
+        return NotFound();
+      }
+    }
+    catch (Exception error)
+    {
+      return BadRequest(error.Message);
+    }
   }
 
   // 9 - Sua aplicação deve ter o endpoint DEL /user
