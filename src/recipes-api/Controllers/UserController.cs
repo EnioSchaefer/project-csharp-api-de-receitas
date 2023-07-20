@@ -26,7 +26,7 @@ public class UserController : ControllerBase
     }
     catch (Exception error)
     {
-      return NotFound(error.Message);
+      return BadRequest(error.Message);
     }
   }
 
@@ -34,7 +34,16 @@ public class UserController : ControllerBase
   [HttpPost]
   public IActionResult Create([FromBody] User user)
   {
-    throw new NotImplementedException();
+    try
+    {
+      _service.AddUser(user);
+
+      return Ok(user);
+    }
+    catch (Exception error)
+    {
+      return NotFound(error.Message);
+    }
   }
 
   // "8 - Sua aplicação deve ter o endpoint PUT /user
