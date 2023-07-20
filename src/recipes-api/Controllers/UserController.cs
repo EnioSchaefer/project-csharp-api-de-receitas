@@ -75,6 +75,24 @@ public class UserController : ControllerBase
   [HttpDelete("{email}")]
   public IActionResult Delete(string email)
   {
-    throw new NotImplementedException();
+    try
+    {
+      bool userExists = _service.UserExists(email);
+
+      if (userExists)
+      {
+        _service.DeleteUser(email);
+
+        return StatusCode(204);
+      }
+      else
+      {
+        return NotFound();
+      }
+    }
+    catch (Exception error)
+    {
+      return BadRequest(error.Message);
+    }
   }
 }
