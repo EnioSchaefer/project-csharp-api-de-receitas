@@ -22,7 +22,14 @@ public class UserController : ControllerBase
     {
       User user = _service.GetUser(email);
 
-      return Ok(user);
+      if (user != null)
+      {
+        return Ok(user);
+      }
+      else
+      {
+        return NotFound();
+      }
     }
     catch (Exception error)
     {
