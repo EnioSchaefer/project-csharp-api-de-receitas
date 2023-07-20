@@ -25,9 +25,9 @@ public class RecipesController : ControllerBase
 
       return Ok(recipes);
     }
-    catch (Exception)
+    catch (Exception error)
     {
-      return BadRequest();
+      return BadRequest(error.Message);
     }
   }
 
@@ -42,9 +42,9 @@ public class RecipesController : ControllerBase
 
       return Ok(recipe);
     }
-    catch (Exception)
+    catch (Exception error)
     {
-      return BadRequest();
+      return BadRequest(error.Message);
     }
   }
 
@@ -58,9 +58,9 @@ public class RecipesController : ControllerBase
 
       return StatusCode(201, recipe);
     }
-    catch (Exception)
+    catch (Exception error)
     {
-      return BadRequest();
+      return BadRequest(error.Message);
     }
   }
 
@@ -70,21 +70,47 @@ public class RecipesController : ControllerBase
   {
     try
     {
-      _service.UpdateRecipe(recipe);
+      bool recipeExists = _service.RecipeExists(name);
 
-      return StatusCode(204);
+      if (recipeExists)
+      {
+        _service.UpdateRecipe(recipe);
+
+        return StatusCode(204);
+      }
+      else
+      {
+        return BadRequest();
+      }
     }
-    catch (Exception)
+    catch (Exception error)
     {
-      return BadRequest();
+      return BadRequest(error.Message);
     }
-
   }
 
   // 5 - Sua aplicação deve ter o endpoint DEL /recipe
   [HttpDelete("{name}")]
   public IActionResult Delete(string name)
   {
-    throw new NotImplementedException();
+    try
+    {
+      bool recipeExists = _service.RecipeExists(name);
+
+      if (recipeExists)
+      {
+        _service.DeleteRecipe(name);
+
+        return StatusCode(204);
+      }
+      else
+      {
+        return NotFound();
+      }
+    }
+    catch (Exception error)
+    {
+      return BadRequest(error.Message);
+    }
   }
 }
