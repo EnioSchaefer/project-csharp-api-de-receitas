@@ -19,9 +19,16 @@ public class RecipesController : ControllerBase
   [HttpGet]
   public IActionResult Get()
   {
-    List<Recipe> recipes = _service.GetRecipes();
+    try
+    {
+      List<Recipe> recipes = _service.GetRecipes();
 
-    return Ok(recipes);
+      return Ok(recipes);
+    }
+    catch (Exception)
+    {
+      return BadRequest();
+    }
   }
 
   // 2 - Sua aplicação deve ter o endpoint GET /recipe/:name
@@ -29,25 +36,49 @@ public class RecipesController : ControllerBase
   [HttpGet("{name}", Name = "GetRecipe")]
   public IActionResult Get(string name)
   {
-    Recipe recipe = _service.GetRecipe(name);
+    try
+    {
+      Recipe recipe = _service.GetRecipe(name);
 
-    return Ok(recipe);
+      return Ok(recipe);
+    }
+    catch (Exception)
+    {
+      return BadRequest();
+    }
   }
 
   // 3 - Sua aplicação deve ter o endpoint POST /recipe
   [HttpPost]
   public IActionResult Create([FromBody] Recipe recipe)
   {
-    _service.AddRecipe(recipe);
+    try
+    {
+      _service.AddRecipe(recipe);
 
-    return StatusCode(201, recipe);
+      return StatusCode(201, recipe);
+    }
+    catch (Exception)
+    {
+      return BadRequest();
+    }
   }
 
   // 4 - Sua aplicação deve ter o endpoint PUT /recipe
   [HttpPut("{name}")]
   public IActionResult Update(string name, [FromBody] Recipe recipe)
   {
-    throw new NotImplementedException();
+    try
+    {
+      _service.UpdateRecipe(recipe);
+
+      return StatusCode(204);
+    }
+    catch (Exception)
+    {
+      return BadRequest();
+    }
+
   }
 
   // 5 - Sua aplicação deve ter o endpoint DEL /recipe
